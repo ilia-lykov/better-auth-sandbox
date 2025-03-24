@@ -1,0 +1,35 @@
+{
+	"name": "better_auth",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "node --no-warnings --loader ts-node/esm ./src/index.ts",
+		"build": "tsc",
+		"start:prod": "node dist/index.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"type": "module",
+	"dependencies": {
+		"@libsql/client": "^0.15.0",
+		"better-auth": "^1.2.4",
+		"better-sqlite3": "^11.9.1",
+		"dotenv": "^16.4.7",
+		"drizzle-kit": "^0.30.5",
+		"drizzle-orm": "^0.41.0",
+		"express": "^5.0.1",
+		"sqlite3": "^5.1.7"
+	},
+	"devDependencies": {
+		"@types/better-sqlite3": "^7.6.12",
+		"@types/express": "^5.0.1",
+		"@types/node": "^22.13.12",
+		"@types/sqlite3": "^3.1.11",
+		"ts-node": "^10.9.2",
+		"tslib": "^2.8.1",
+		"typescript": "^5.8.2"
+	}
+}
