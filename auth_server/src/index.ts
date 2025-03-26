@@ -15,10 +15,9 @@ app.use(
 );
 
 // app.all('/api/auth/*splat', toNodeHandler(auth));
-app.all("/api/auth/*splat", (req, resp) => {
-  console.log(req.body);
-  resp.send(`\n Отработал middleware \n`);
+app.all("/api/auth/*splat", (req: Request, res: Response, next) => {
   toNodeHandler(auth);
+  next();
 });
 
 // Mount express json middleware after Better Auth handler
@@ -26,7 +25,7 @@ app.all("/api/auth/*splat", (req, resp) => {
 app.use(express.json());
 
 app.post("/api/auth/sign-up/email", (req: Request, res: Response) => {
-  console.log("Received signup request:", req.body);
+  console.log("Received sign-up request:", req.body);
   const { email, password, name } = req.body;
 
   if (!email || !password || !name) {
@@ -34,6 +33,17 @@ app.post("/api/auth/sign-up/email", (req: Request, res: Response) => {
   }
 
   res.json({ message: "User registered", email, name });
+});
+
+app.post("/api/auth/sign-in/email", (req: Request, res: Response) => {
+  console.log("Received sign-in request:", req.body);
+  const { email, password, name } = req.body;
+
+  if (!email || !password || !name) {
+    res.status(400).json({ error: "Missing required fields" });
+  }
+
+  res.json({ message: "User login", email, name });
 });
 
 app.listen(port, () => {
