@@ -14,15 +14,16 @@ app.use(
   })
 );
 
+app.use(express.json());
+
 // app.all('/api/auth/*splat', toNodeHandler(auth));
-app.all("/api/auth/*splat", (req: Request, res: Response, next) => {
+app.all("/api/auth/*splat", (req, res, next) => {
   toNodeHandler(auth);
   next();
 });
 
 // Mount express json middleware after Better Auth handler
 // or only apply it to routes that don't interact with Better Auth
-app.use(express.json());
 
 app.post("/api/auth/sign-up/email", (req: Request, res: Response) => {
   console.log("Received sign-up request:", req.body);
@@ -32,18 +33,35 @@ app.post("/api/auth/sign-up/email", (req: Request, res: Response) => {
     res.status(400).json({ error: "Missing required fields" });
   }
 
-  res.json({ message: "User registered", email, name });
+  const response = auth.api.signUpEmail({
+    body: {
+      name,
+      email,
+      password,
+    },
+    asResponse: true,
+  });
+  // returns a response object instead of data
+
+  res.json(response);
 });
 
 app.post("/api/auth/sign-in/email", (req: Request, res: Response) => {
   console.log("Received sign-in request:", req.body);
-  const { email, password, name } = req.body;
+  const { email, password } = req.body;
 
-  if (!email || !password || !name) {
+  if (!email || !password) {
     res.status(400).json({ error: "Missing required fields" });
   }
+  const response = auth.api.signInEmail({
+    body: {
+      email,
+      password,
+    },
+    asResponse: true,
+  });
 
-  res.json({ message: "User login", email, name });
+  res.json(response);
 });
 
 app.listen(port, () => {
