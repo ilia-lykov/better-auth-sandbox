@@ -46,20 +46,22 @@ app.post("/api/auth/sign-up/email", (req: Request, res: Response) => {
   res.json(response);
 });
 
-app.post("/api/auth/sign-in/email", (req: Request, res: Response) => {
+app.post("/api/auth/sign-in/email", async (req: Request, res: Response) => {
   console.log("Received sign-in request:", req.body);
   const { email, password } = req.body;
 
   if (!email || !password) {
     res.status(400).json({ error: "Missing required fields" });
   }
-  const response = auth.api.signInEmail({
+  const response = await auth.api.signInEmail({
     body: {
       email,
       password,
     },
     asResponse: true,
   });
+
+  console.log(response);
 
   res.json(response);
 });
