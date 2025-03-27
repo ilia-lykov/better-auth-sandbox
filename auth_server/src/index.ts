@@ -18,6 +18,7 @@ app.use(express.json());
 
 // app.all('/api/auth/*splat', toNodeHandler(auth));
 app.all("/api/auth/*splat", (req, res, next) => {
+  console.log(`[${req.method}] URL: ${req.url}`);
   toNodeHandler(auth);
   next();
 });
@@ -40,14 +41,12 @@ app.post("/api/auth/sign-up/email", (req: Request, res: Response) => {
       password,
     },
     asResponse: true,
-  });
-  // returns a response object instead of data
+  }); // returns a response object instead of data
 
   res.json(response);
 });
 
 app.post("/api/auth/sign-in/email", async (req: Request, res: Response) => {
-  console.log("Received sign-in request:", req.body);
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -58,12 +57,15 @@ app.post("/api/auth/sign-in/email", async (req: Request, res: Response) => {
       email,
       password,
     },
-    asResponse: true,
   });
 
   console.log(response);
 
   res.json(response);
+});
+
+app.get("/api/auth/get-session", async (req, res) => {
+  res.send("TOKEN");
 });
 
 app.listen(port, () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from '../lib/auth-client';
+import { authClient, signIn } from '../lib/auth-client';
 import Link from 'next/link';
 
 export default function SignIn() {
@@ -9,6 +9,22 @@ export default function SignIn() {
 	const [password, setPassword] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [rememberMe, setRememberMe] = useState(false);
+	const [serverResponse, setServerResponse] = useState<string | null>(null);
+
+	const handleSignIn = async () => {
+		setLoading(true);
+		const response = await signIn.email({
+			email,
+			password,
+			callbackURL: '/user-profile'
+		});
+		if (response.error) {
+			setServerResponse(`Ошибка: ${response.error}`);
+			setLoading(false);
+		}
+		setServerResponse(JSON.stringify(response, null, 2));
+		setLoading(false);
+	};
 
 	return (
 		<div>
@@ -44,22 +60,18 @@ export default function SignIn() {
 				Remember me
 			</label>
 
-			<button
-				type='submit'
-				disabled={loading}
-				onClick={async () => {
-					await signIn.email({ email, password });
-				}}>
+			<button type='submit' disabled={loading} onClick={handleSignIn}>
 				{loading ? 'Loading...' : 'Login'}
 			</button>
 
-			<button
-				onClick={async () => {
-					await signIn.passkey();
-				}}>
-				Sign-in with Passkey
-			</button>
+			{/* Показываем текущую сессию */}
 
+			{/* Отображаем ответ сервера */}
+			{serverResponse && (
+				<pre style={{ background: '#f4f4f4', padding: '10px' }}>
+					{serverResponse}
+				</pre>
+			)}
 			<p>
 				Powered by{' '}
 				<Link href='https://better-auth.com'>better-auth</Link>
