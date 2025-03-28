@@ -15,7 +15,6 @@ app.use(
 );
 
 app.use(express.json());
-
 // app.all('/api/auth/*splat', toNodeHandler(auth));
 app.all("/api/auth/*splat", (req, res, next) => {
   console.log(`[${req.method}] URL: ${req.url}`);
@@ -52,19 +51,23 @@ app.post("/api/auth/sign-in/email", async (req: Request, res: Response) => {
   if (!email || !password) {
     res.status(400).json({ error: "Missing required fields" });
   }
-  const response = await auth.api.signInEmail({
+  const { headers, response } = await auth.api.signInEmail({
+    returnHeaders: true,
     body: {
       email,
       password,
     },
   });
-
-  console.log(response);
-
+  const cookie = headers.get("set-cookie");
+  res.append("set-cookie", <string>cookie);
+  // // console.log(response);
+  // console.log(res.getHeaders());
+  // console.log(response);
   res.json(response);
 });
 
 app.get("/api/auth/get-session", async (req, res) => {
+  console.log(req.headers);
   res.send("TOKEN");
 });
 

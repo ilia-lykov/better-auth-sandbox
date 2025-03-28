@@ -13,16 +13,24 @@ export default function SignIn() {
 
 	const handleSignIn = async () => {
 		setLoading(true);
-		const response = await signIn.email({
+		const response = await authClient.signIn.email({
 			email,
 			password,
-			callbackURL: '/user-profile'
+			callbackURL: '/user-profile',
+			fetchOptions: {
+				onSuccess(ctx) {
+					console.log(ctx);
+				}
+			}
 		});
-		if (response.error) {
-			setServerResponse(`Ошибка: ${response.error}`);
-			setLoading(false);
-		}
-		setServerResponse(JSON.stringify(response, null, 2));
+		const { data, error } = response;
+
+		// if (error) {
+		// 	setServerResponse(`Ошибка: ${error}`);
+		// 	setLoading(false);
+		// }
+
+		setServerResponse(JSON.stringify(data));
 		setLoading(false);
 	};
 

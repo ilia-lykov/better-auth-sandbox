@@ -23,12 +23,29 @@ export const auth = betterAuth({
   session: {
     freshAge: 0,
   },
+  // advanced: {
+  //   cookies: {
+  //     session_token: {
+  //       name: "custom_session_token",
+  //     },
+  //   },
+  // },
   advanced: {
     cookies: {
       session_token: {
         name: "custom_session_token",
       },
     },
+    // crossSubDomainCookies: {
+    //   enabled: true,
+    // },
+    defaultCookieAttributes: {
+      secure: true,
+      httpOnly: true,
+      sameSite: "None", // Allows CORS-based cookie sharing across subdomains
+      partitioned: true, // New browser standards will mandate this for foreign cookies
+    },
   },
+  // trustedOrigins: ["http://localhost:3000"],
   plugins: [jwt()],
 });
