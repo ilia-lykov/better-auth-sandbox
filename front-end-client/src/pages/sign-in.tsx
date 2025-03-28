@@ -19,7 +19,8 @@ export default function SignIn() {
 			callbackURL: '/user-profile',
 			fetchOptions: {
 				onSuccess(ctx) {
-					console.log(ctx);
+					// console.log(ctx.data);
+					localStorage.setItem('user', JSON.stringify(ctx.data));
 				}
 			}
 		});
