@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { signUp } from '../lib/auth-client';
-import { useRouter } from 'next/navigation';
 
 function SignUp() {
 	const [firstName, setFirstName] = useState('');
@@ -11,7 +10,6 @@ function SignUp() {
 	const [password, setPassword] = useState('');
 	const [passwordConfirmation, setPasswordConfirmation] = useState('');
 	const [loading, setLoading] = useState(false);
-	const router = useRouter();
 
 	return (
 		<div>

@@ -2,7 +2,13 @@ import { betterAuth } from "better-auth";
 import { jwt } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/index.js";
-import { account, session, user, verification } from "../db/auth-schema.js";
+import {
+  account,
+  jwks,
+  session,
+  user,
+  verification,
+} from "../db/auth-schema.js";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -12,6 +18,7 @@ export const auth = betterAuth({
       account,
       verification,
       session,
+      jwks,
     }, // or "mysql", "sqlite"
   }),
   emailAndPassword: {
@@ -23,13 +30,6 @@ export const auth = betterAuth({
   session: {
     freshAge: 0,
   },
-  // advanced: {
-  //   cookies: {
-  //     session_token: {
-  //       name: "custom_session_token",
-  //     },
-  //   },
-  // },
   advanced: {
     cookies: {
       session_token: {
@@ -46,6 +46,6 @@ export const auth = betterAuth({
       partitioned: true, // New browser standards will mandate this for foreign cookies
     },
   },
-  // trustedOrigins: ["http://localhost:3000"],
+  trustedOrigins: ["http://localhost:3000"],
   plugins: [jwt()],
 });
