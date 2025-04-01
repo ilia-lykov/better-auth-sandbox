@@ -44,7 +44,6 @@ authRouter.post("/sign-in/email", async (req: Request, res: Response) => {
         password,
       },
     });
-    console.log(res.getHeaders());
     res.setHeaders(headers);
     res.status(200).json(response);
   } catch (error) {
@@ -59,7 +58,26 @@ authRouter.get("/get-session", async (req, res) => {
     const session = await auth.api.getSession({
       headers: fromNodeHeaders(req.headers),
     });
+    console.log(res.getHeaders());
     res.json(session);
+  } catch (error) {
+    console.log("Ошибка", error);
+  }
+});
+
+authRouter.post("/token", async (req, res) => {
+  try {
+    const { token } = await auth.api.getToken({
+      headers: fromNodeHeaders(req.headers),
+    });
+    res.cookie("set-auth-jwt", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 60 * 60 * 1000,
+    });
+    console.log(res.getHeaders());
+    res.status(200).json(token);
   } catch (error) {
     console.log("Ошибка", error);
   }

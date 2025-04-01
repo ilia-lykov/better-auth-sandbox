@@ -19,19 +19,28 @@ export default function SignIn() {
 			callbackURL: '/user-profile',
 			fetchOptions: {
 				onSuccess(ctx) {
-					// console.log(ctx.data);
+					// const authToken =
+					// 	ctx.response.headers.get('set-auth-token'); // get the token from the response headers
+					// // Store the token securely (e.g., in localStorage)
+					// if (authToken) {
+					// 	localStorage.setItem('bearer_token', authToken);
+					// }
+
 					localStorage.setItem('user', JSON.stringify(ctx.data));
+					setServerResponse(JSON.stringify(ctx.data));
+				},
+				onError(ctx) {
+					setServerResponse(`Ошибка: ${ctx.error}`);
 				}
 			}
 		});
-		const { data, error } = response;
 
 		// if (error) {
 		// 	setServerResponse(`Ошибка: ${error}`);
 		// 	setLoading(false);
 		// }
 
-		setServerResponse(JSON.stringify(data));
+		// setServerResponse(JSON.stringify(data));
 		setLoading(false);
 	};
 

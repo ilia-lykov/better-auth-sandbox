@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import { jwt } from "better-auth/plugins";
+import { jwt, bearer } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/index.js";
 import {
@@ -41,11 +41,25 @@ export const auth = betterAuth({
     // },
     defaultCookieAttributes: {
       secure: true,
-      httpOnly: true,
+      httpOnly: false,
       sameSite: "None", // Allows CORS-based cookie sharing across subdomains
       partitioned: true, // New browser standards will mandate this for foreign cookies
     },
   },
   trustedOrigins: ["http://localhost:3000"],
-  plugins: [jwt()],
+  plugins: [
+    jwt({
+      jwt: {
+        issuer: process.env.BASE_URL,
+        audience: "http://localhost:3000",
+        expirationTime: "1h",
+        definePayload: (session) => {
+          return {
+            id: session.user.id,
+            email: session.user.email,
+          };
+        },
+      },
+    }),
+  ],
 });
