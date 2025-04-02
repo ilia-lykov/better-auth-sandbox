@@ -30,7 +30,9 @@ export default function SignIn() {
 					setServerResponse(JSON.stringify(ctx.data));
 				},
 				onError(ctx) {
-					setServerResponse(`Ошибка: ${ctx.error}`);
+					setServerResponse(
+						`Ошибка: ${JSON.stringify(ctx.error.error)}`
+					);
 				}
 			}
 		});

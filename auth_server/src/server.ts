@@ -1,5 +1,5 @@
 import cors from "cors";
-import express, { Request, Response } from "express";
+import express, { Request, Response, ErrorRequestHandler } from "express";
 
 import authRouter from "./routes/auth.routes.js";
 

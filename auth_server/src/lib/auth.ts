@@ -28,12 +28,14 @@ export const auth = betterAuth({
     },
   },
   session: {
-    freshAge: 0,
+    expiresIn: 60,
+    updateAge: 10,
+    // expiresIn: 60 * 60 * 24 * 7, // 7 days
   },
   advanced: {
     cookies: {
       session_token: {
-        name: "custom_session_token",
+        name: "refresh_token",
       },
     },
     // crossSubDomainCookies: {
@@ -41,7 +43,7 @@ export const auth = betterAuth({
     // },
     defaultCookieAttributes: {
       secure: true,
-      httpOnly: false,
+      httpOnly: true,
       sameSite: "None", // Allows CORS-based cookie sharing across subdomains
       partitioned: true, // New browser standards will mandate this for foreign cookies
     },

@@ -3,6 +3,7 @@ import { fromNodeHeaders } from "better-auth/node";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "../lib/auth.js";
 import { APIError } from "better-auth/api";
+import { getToken } from "../handlers/getToken.handler.js";
 
 const authRouter = Router();
 
@@ -26,7 +27,7 @@ authRouter.post("/sign-up/email", async (req: Request, res: Response) => {
     res.status(200).json(response);
   } catch (error) {
     if (error instanceof APIError) {
-      res.status(error.statusCode).json({ error: error.message });
+      res.status(error.statusCode).json(error);
     }
   }
 });
@@ -34,9 +35,6 @@ authRouter.post("/sign-up/email", async (req: Request, res: Response) => {
 authRouter.post("/sign-in/email", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      res.status(400).json({ error: "Missing required fields" });
-    }
     const { headers, response } = await auth.api.signInEmail({
       returnHeaders: true,
       body: {
@@ -48,7 +46,7 @@ authRouter.post("/sign-in/email", async (req: Request, res: Response) => {
     res.status(200).json(response);
   } catch (error) {
     if (error instanceof APIError) {
-      res.status(error.statusCode).json({ error: error.message });
+      res.status(error.statusCode).json(error);
     }
   }
 });
@@ -58,29 +56,18 @@ authRouter.get("/get-session", async (req, res) => {
     const session = await auth.api.getSession({
       headers: fromNodeHeaders(req.headers),
     });
-    console.log(res.getHeaders());
+    if (!session) {
+      throw new APIError("UNAUTHORIZED");
+    }
     res.json(session);
   } catch (error) {
-    console.log("Ошибка", error);
+    if (error instanceof APIError) {
+      console.log("session catch");
+      res.status(error.statusCode).json(error);
+    }
   }
 });
 
-authRouter.post("/token", async (req, res) => {
-  try {
-    const { token } = await auth.api.getToken({
-      headers: fromNodeHeaders(req.headers),
-    });
-    res.cookie("set-auth-jwt", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 60 * 60 * 1000,
-    });
-    console.log(res.getHeaders());
-    res.status(200).json(token);
-  } catch (error) {
-    console.log("Ошибка", error);
-  }
-});
+authRouter.post("/token", getToken);
 
 export default authRouter;

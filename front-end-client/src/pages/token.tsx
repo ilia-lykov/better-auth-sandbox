@@ -3,7 +3,6 @@ import { authClient } from '@/lib/auth-client';
 import { useState } from 'react';
 
 export default function UserToken() {
-	// const session = authClient.useSession();
 	const [loading, setLoading] = useState(false);
 	const [serverResponse, setServerResponse] = useState<string | null>(null);
 
