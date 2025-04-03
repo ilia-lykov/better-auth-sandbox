@@ -1,10 +1,10 @@
 import { createAuthClient } from 'better-auth/react';
-import { jwtClient } from 'better-auth/client/plugins';
+import { jwtClient, phoneNumberClient } from 'better-auth/client/plugins';
 
 let authToken;
 export const authClient = createAuthClient({
 	baseURL: 'http://localhost:3005/api/auth',
-	plugins: [jwtClient()]
+	plugins: [jwtClient(), phoneNumberClient()]
 	// fetchOptions: {
 	// 	auth: {
 	// 		type: 'Bearer',

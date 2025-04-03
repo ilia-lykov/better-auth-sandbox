@@ -28,11 +28,13 @@ export default function SignIn() {
 
 					localStorage.setItem('user', JSON.stringify(ctx.data));
 					setServerResponse(JSON.stringify(ctx.data));
+					setLoading(false);
 				},
 				onError(ctx) {
 					setServerResponse(
 						`Ошибка: ${JSON.stringify(ctx.error.error)}`
 					);
+					setLoading(false);
 				}
 			}
 		});
@@ -43,7 +45,6 @@ export default function SignIn() {
 		// }
 
 		// setServerResponse(JSON.stringify(data));
-		setLoading(false);
 	};
 
 	return (

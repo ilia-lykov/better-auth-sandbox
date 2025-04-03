@@ -1,7 +1,10 @@
 import cors from "cors";
 import express, { Request, Response, ErrorRequestHandler } from "express";
+import { toNodeHandler } from "better-auth/node";
 
-import authRouter from "./routes/auth.routes.js";
+import emailAuthRouter from "./routes/email.auth.routes.js";
+import { auth } from "./lib/auth.js";
+import otpAuthRouter from "./routes/otp.auth.routes.js";
 
 const app = express();
 
@@ -16,9 +19,14 @@ app.all("/*splat", (req, res, next) => {
   console.log(`[${req.method}] URL: ${req.url}`);
   next();
 });
-
 app.use(express.json());
 
-app.use("/api/auth", authRouter);
+emailAuthRouter.all("/api/auth/*splat", (res, req, next) => {
+  toNodeHandler(auth);
+  next();
+});
+
+app.use("/api/auth", emailAuthRouter);
+app.use("/api/auth/phone-number", otpAuthRouter);
 
 export default app;

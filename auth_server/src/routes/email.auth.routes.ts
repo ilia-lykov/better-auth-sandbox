@@ -5,14 +5,9 @@ import { auth } from "../lib/auth.js";
 import { APIError } from "better-auth/api";
 import { getToken } from "../handlers/getToken.handler.js";
 
-const authRouter = Router();
+const emailAuthRouter = Router();
 
-authRouter.all("/*splat", (res, req, next) => {
-  toNodeHandler(auth);
-  next();
-});
-
-authRouter.post("/sign-up/email", async (req: Request, res: Response) => {
+emailAuthRouter.post("/sign-up/email", async (req: Request, res: Response) => {
   try {
     const { email, password, name } = req.body;
     const { headers, response } = await auth.api.signUpEmail({
@@ -32,7 +27,7 @@ authRouter.post("/sign-up/email", async (req: Request, res: Response) => {
   }
 });
 
-authRouter.post("/sign-in/email", async (req: Request, res: Response) => {
+emailAuthRouter.post("/sign-in/email", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     const { headers, response } = await auth.api.signInEmail({
@@ -51,7 +46,7 @@ authRouter.post("/sign-in/email", async (req: Request, res: Response) => {
   }
 });
 
-authRouter.get("/get-session", async (req, res) => {
+emailAuthRouter.get("/get-session", async (req, res) => {
   try {
     const session = await auth.api.getSession({
       headers: fromNodeHeaders(req.headers),
@@ -68,6 +63,6 @@ authRouter.get("/get-session", async (req, res) => {
   }
 });
 
-authRouter.post("/token", getToken);
+emailAuthRouter.post("/token", getToken);
 
-export default authRouter;
+export default emailAuthRouter;

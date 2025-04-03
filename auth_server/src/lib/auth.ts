@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import { jwt, bearer } from "better-auth/plugins";
+import { jwt, phoneNumber } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/index.js";
 import {
@@ -61,6 +61,12 @@ export const auth = betterAuth({
             email: session.user.email,
           };
         },
+      },
+    }),
+    phoneNumber({
+      sendOTP({ phoneNumber, code }, request) {
+        console.log("Сode Dev Mode", code);
+        console.log(request);
       },
     }),
   ],
