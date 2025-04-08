@@ -25,9 +25,23 @@ export default function SignIn() {
 					// if (authToken) {
 					// 	localStorage.setItem('bearer_token', authToken);
 					// }
-
 					localStorage.setItem('user', JSON.stringify(ctx.data));
 					setServerResponse(JSON.stringify(ctx.data));
+					const token = fetch(
+						'http://localhost:3005/api/auth/token',
+						{
+							method: 'POST',
+							credentials: 'include'
+						}
+					).then((token) => {
+						const jwt = token.headers.get('set-auth-jwt');
+						console.log(jwt);
+						if (!jwt) {
+							setLoading(false);
+						} else {
+							localStorage.setItem('bearer', jwt);
+						}
+					});
 					setLoading(false);
 				},
 				onError(ctx) {

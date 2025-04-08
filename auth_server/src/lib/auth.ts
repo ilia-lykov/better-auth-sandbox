@@ -28,7 +28,7 @@ export const auth = betterAuth({
     },
   },
   session: {
-    expiresIn: 60,
+    expiresIn: 300,
     updateAge: 10,
     // expiresIn: 60 * 60 * 24 * 7, // 7 days
   },
@@ -67,6 +67,9 @@ export const auth = betterAuth({
       sendOTP({ phoneNumber, code }, request) {
         console.log("Сode Dev Mode", code);
         console.log(request);
+      },
+      async callbackOnVerification({ phoneNumber, user }, request) {
+        console.log("callbackOnVefircation", phoneNumber, user);
       },
     }),
   ],

@@ -19,4 +19,15 @@ otpAuthRouter.post("/send-otp", async (req, res) => {
   res.json(data);
 });
 
+otpAuthRouter.post("/verify", async (req, res) => {
+  const { code, phoneNumber } = req.body;
+  const data = await auth.api.verifyPhoneNumber({
+    body: {
+      code,
+      phoneNumber,
+    },
+  });
+  res.json(data);
+});
+
 export default otpAuthRouter;
